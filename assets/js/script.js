@@ -1,21 +1,65 @@
-// Use Day.js to format the following variables:
-// 1. What is today's date in the following format: Jan 1st, 1999?
-var today = dayjs();
-$('#1a').text(today.format('MMM D, YYYY'));
+// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
+// the code isn't run until the browser has finished rendering all the elements
+// in the html.
+//i dont really understand this part
+  $(function () { 
+  
+  // TODO: Add a listener for click events on the save button. This code should
+  // use the id in the containing time-block as a key to save the user input in
+  // local storage. HINT: What does `this` reference in the click listener
+  // function? How can DOM traversal be used to get the "hour-x" id of the
+  // time-block containing the button that was clicked? How might the id be
+  // useful when saving the description in local storage?
 
-// 2. What is the day of the week today?
-var dayWeek = today.format('[Today is] dddd');
-$('#2a').text(dayWeek);
+  $('.saveBtn').on('click', function() {
+    let textInput = $(this).siblings('.description').val();
+    let timeId = $(this).parent().attr('id');
+    localStorage.setItem(timeId, textInput);
+  });
 
-// 3. Parse the following date, 11/3/2020, and convert it into the following format: Sunday, February 14 2010, 3:25:50 pm.
-var reformatDate = dayjs('2020-11-03').format('dddd, MMMM D YYYY, h:mm:ss a');
-$('#3a').text(reformatDate);
+  // TODO: Add code to apply the past, present, or future class to each time
+  // block by comparing the id to the current hour. HINTS: How can the id
+  // attribute of each time-block be used to conditionally add or remove the
+  // past, present, and future classes? How can Day.js be used to get the
+  // current hour in 24-hour time?
+  
+  $('.time-block').each(function () {
+    let timeComp = dayjs().hour()
+    let timeAttr = parseInt($(this).attr('id'));
 
-// 4. I need to place my recycling bin on the curb on every odd week of the year for collection. Do I need to put out my recycling bin out this week?
-// Dayjs' .diff() method does NOT include partial weeks in its calculation.
-var beginningOfYear = dayjs('2022-01-01');
-var weekNum = today.diff(beginningOfYear, 'week');
+    if (timeAttr < timeComp) {
+      $(this).addClass('past');
+      $(this).removeClass('future');
+      $(this).removeClass('present');
+    } 
 
-// Check for odd week, then assign boolean to variable
-var takeOut = weekNum % 2 === 1;
-$('#4a').text(takeOut + ", because it's currently week " + weekNum);
+    else if (timeAttr === timeComp) {
+      $(this).addClass('present');
+      $(this).removeClass('past');
+      $(this).removeClass('future');
+    } 
+  
+    else {
+      $(this).addClass('future');
+      $(this).removeClass('past');
+      $(this).removeClass('present');
+    }
+  });
+
+  // TODO: Add code to get any user input that was saved in localStorage and set
+  // the values of the corresponding textarea elements. HINT: How can the id
+  // attribute of each time-block be used to do this?
+  $('#9 .description').val(localStorage.getItem('9'));
+  $('#10 .description').val(localStorage.getItem('10'));
+  $('#11 .description').val(localStorage.getItem('11'));
+  $('#12 .description').val(localStorage.getItem('12'));
+  $('#13 .description').val(localStorage.getItem('13'));
+  $('#14 .description').val(localStorage.getItem('14'));
+  $('#15 .description').val(localStorage.getItem('15'));
+  $('#16 .description').val(localStorage.getItem('16'));
+  $('#17 .description').val(localStorage.getItem('17'));
+
+  // TODO: Add code to display the current date in the header of the page.
+  let curDay =dayjs();
+  $('#currentDay').text(curDay.format('MMM D, YYYY'));
+});
